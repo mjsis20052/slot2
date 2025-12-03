@@ -1,7 +1,7 @@
 import { SlotGame } from './types';
 
 // Updated WhatsApp link for recharges
-export const WHATSAPP_LINK = "https://wa.me/1234567890?text=Hola,%20quiero%20hacer%20una%20recarga";
+export const WHATSAPP_LINK = "https://wa.me/5491162018526?text=Hola,%20quiero%20hacer%20una%20recarga";
 
 export const FEATURED_GAMES: SlotGame[] = [
   { id: '1', title: 'Volcano Rising', imageUrl: 'https://picsum.photos/seed/volcano/300/200', isHot: true },
