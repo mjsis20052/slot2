@@ -117,7 +117,7 @@ const VideoBanner: React.FC = () => {
         {/* Content - Using padding instead of fixed aspect ratio to prevent cutting off text */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/85 via-brand-dark/40 to-transparent min-h-[400px]">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-black text-white italic drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-4 neon-text leading-tight">
-            DESPUÉS DE RECARGA <br className="sm:hidden" /> QUEDARÍA OBTÉN UN BONO DE
+            OBTÉN TU BONO CON <br className="sm:hidden" /> LA PRIMERA RECARGA MAYOR A
           </h1>
           <div className="bg-brand-dark/50 backdrop-blur-sm px-6 py-2 rounded-lg border border-brand-gold/30 mb-8 inline-block transform -skew-x-12">
             <p className="text-brand-gold text-2xl md:text-4xl font-bold uppercase tracking-widest gold-text-glow transform skew-x-12">
