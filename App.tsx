@@ -12,13 +12,52 @@ const VideoBanner: React.FC = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      video.muted = isMuted;
       video.volume = 0.5;
       
-      // Forzar reproducción
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
+      // Forzar reproducción al cargar (inicialmente silenciado para evitar bloqueos del navegador)
+      const playVideo = async () => {
+        try {
+          // Intentar reproducir silenciado primero (los navegadores permiten esto)
+          video.muted = true;
+          await video.play();
+          console.log('Video reproduciéndose (silenciado inicialmente)');
+        } catch (error) {
+          console.log('Error al reproducir video:', error);
+        }
+      };
+      
+      // Intentar reproducir cuando el video esté listo
+      if (video.readyState >= 2) {
+        playVideo();
+      } else {
+        video.addEventListener('loadeddata', playVideo, { once: true });
+        video.addEventListener('canplay', playVideo, { once: true });
+      }
+      
+      // También intentar cuando el usuario interactúe (para activar sonido)
+      const handleUserInteraction = () => {
+        if (video.paused) {
+          video.play().catch(console.error);
+        }
+      };
+      
+      document.addEventListener('click', handleUserInteraction, { once: true });
+      document.addEventListener('touchstart', handleUserInteraction, { once: true });
+      
+      return () => {
+        document.removeEventListener('click', handleUserInteraction);
+        document.removeEventListener('touchstart', handleUserInteraction);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = isMuted;
+      // Asegurar que el video se esté reproduciendo
+      if (video.paused) {
+        video.play().catch(error => {
           console.log('Error al reproducir video:', error);
         });
       }
