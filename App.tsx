@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Header from './components/Header';
 import NotificationToast from './components/NotificationToast';
 import ContactSection from './components/ContactSection';
@@ -7,71 +7,66 @@ import { AudioProvider, useAudio } from './contexts/AudioContext';
 
 const VideoBanner: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showPlayOverlay, setShowPlayOverlay] = useState(true);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const { isMuted } = useAudio();
+
+  // Función para iniciar el video con sonido después de interacción del usuario
+  const startVideoWithSound = async () => {
+    const video = videoRef.current;
+    if (video) {
+      try {
+        video.muted = false;
+        video.volume = 0.5;
+        await video.play();
+        setShowPlayOverlay(false);
+        setHasUserInteracted(true);
+        console.log('Video iniciado con sonido después de interacción del usuario');
+      } catch (error) {
+        console.error('Error al iniciar video con sonido:', error);
+        // Si falla, intentar silenciado
+        try {
+          video.muted = true;
+          await video.play();
+          setShowPlayOverlay(false);
+          setHasUserInteracted(true);
+        } catch (e) {
+          console.error('Error al iniciar video:', e);
+        }
+      }
+    }
+  };
 
   // Efecto para inicializar el video al cargar
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
+    if (video && !hasUserInteracted) {
       video.volume = 0.5;
-      video.muted = false; // Iniciar con sonido activado
       
-      // Forzar reproducción al cargar - intentar con sonido primero
-      const playVideo = async () => {
+      // Intentar reproducir automáticamente (puede fallar por políticas del navegador)
+      const tryAutoPlay = async () => {
         try {
-          // Intentar reproducir con sonido
           video.muted = false;
           await video.play();
-          console.log('Video reproduciéndose con sonido activado');
+          setShowPlayOverlay(false);
+          setHasUserInteracted(true);
+          console.log('Video reproduciéndose automáticamente con sonido');
         } catch (error) {
-          console.log('Error al reproducir con sonido, intentando silenciado:', error);
-          // Si falla, intentar reproducir silenciado como fallback
-          try {
-            video.muted = true;
-            await video.play();
-            console.log('Video reproduciéndose (silenciado como fallback)');
-          } catch (e) {
-            console.log('Error al reproducir video:', e);
-          }
+          console.log('Autoplay bloqueado, mostrando overlay de reproducción');
+          // Si falla, mostrar el overlay para que el usuario interactúe
+          setShowPlayOverlay(true);
         }
       };
       
-      // Intentar reproducir cuando el video esté listo
+      // Intentar cuando el video esté listo
       if (video.readyState >= 2) {
-        playVideo();
+        tryAutoPlay();
       } else {
-        video.addEventListener('loadeddata', playVideo, { once: true });
-        video.addEventListener('canplay', playVideo, { once: true });
+        video.addEventListener('loadeddata', tryAutoPlay, { once: true });
+        video.addEventListener('canplay', tryAutoPlay, { once: true });
       }
-      
-      // También intentar cuando el usuario interactúe (para activar sonido si estaba bloqueado)
-      const handleUserInteraction = async () => {
-        if (video.paused) {
-          try {
-            video.muted = false;
-            await video.play();
-          } catch (error) {
-            console.error('Error al reproducir después de interacción:', error);
-          }
-        } else if (video.muted) {
-          // Si el video está reproduciéndose pero silenciado, intentar activar sonido
-          try {
-            video.muted = false;
-          } catch (error) {
-            console.error('Error al activar sonido:', error);
-          }
-        }
-      };
-      
-      document.addEventListener('click', handleUserInteraction, { once: true });
-      document.addEventListener('touchstart', handleUserInteraction, { once: true });
-      
-      return () => {
-        document.removeEventListener('click', handleUserInteraction);
-        document.removeEventListener('touchstart', handleUserInteraction);
-      };
     }
-  }, []);
+  }, [hasUserInteracted]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -93,7 +88,6 @@ const VideoBanner: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/60 via-brand-dark/60 to-brand-purple/60 z-0"></div>
         <video 
           ref={videoRef}
-          autoPlay
           loop
           playsInline
           muted={isMuted}
@@ -101,6 +95,24 @@ const VideoBanner: React.FC = () => {
         >
           <source src="/video/fondo.mp4" type="video/mp4" />
         </video>
+        
+        {/* Overlay de reproducción - se muestra si el autoplay falla */}
+        {showPlayOverlay && (
+          <div 
+            className="absolute inset-0 z-20 flex items-center justify-center bg-brand-dark/80 backdrop-blur-sm cursor-pointer"
+            onClick={startVideoWithSound}
+          >
+            <div className="text-center">
+              <button className="bg-brand-accent hover:bg-fuchsia-500 text-white font-bold py-4 px-8 rounded-full shadow-[0_0_30px_rgba(217,0,255,0.6)] transition-all transform hover:scale-105 uppercase tracking-wide text-lg flex items-center gap-3 mx-auto">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                REPRODUCIR CON SONIDO
+              </button>
+              <p className="text-white/80 mt-4 text-sm">Haz clic para iniciar el video con sonido</p>
+            </div>
+          </div>
+        )}
         
         {/* Content - Using padding instead of fixed aspect ratio to prevent cutting off text */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/85 via-brand-dark/40 to-transparent min-h-[400px]">
