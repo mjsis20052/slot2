@@ -20,6 +20,8 @@ function App() {
                     autoPlay
                     loop
                     playsInline
+                    muted={false}
+                    volume={0.5}
                     className="absolute inset-0 w-full h-full object-cover opacity-70 z-0"
                 >
                     <source src="/video/fondo.mp4" type="video/mp4" />
