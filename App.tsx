@@ -9,20 +9,30 @@ const VideoBanner: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { isMuted } = useAudio();
 
+  // Efecto para inicializar el video al cargar
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       video.volume = 0.5;
+      video.muted = false; // Iniciar con sonido activado
       
-      // Forzar reproducción al cargar (inicialmente silenciado para evitar bloqueos del navegador)
+      // Forzar reproducción al cargar - intentar con sonido primero
       const playVideo = async () => {
         try {
-          // Intentar reproducir silenciado primero (los navegadores permiten esto)
-          video.muted = true;
+          // Intentar reproducir con sonido
+          video.muted = false;
           await video.play();
-          console.log('Video reproduciéndose (silenciado inicialmente)');
+          console.log('Video reproduciéndose con sonido activado');
         } catch (error) {
-          console.log('Error al reproducir video:', error);
+          console.log('Error al reproducir con sonido, intentando silenciado:', error);
+          // Si falla, intentar reproducir silenciado como fallback
+          try {
+            video.muted = true;
+            await video.play();
+            console.log('Video reproduciéndose (silenciado como fallback)');
+          } catch (e) {
+            console.log('Error al reproducir video:', e);
+          }
         }
       };
       
@@ -34,10 +44,22 @@ const VideoBanner: React.FC = () => {
         video.addEventListener('canplay', playVideo, { once: true });
       }
       
-      // También intentar cuando el usuario interactúe (para activar sonido)
-      const handleUserInteraction = () => {
+      // También intentar cuando el usuario interactúe (para activar sonido si estaba bloqueado)
+      const handleUserInteraction = async () => {
         if (video.paused) {
-          video.play().catch(console.error);
+          try {
+            video.muted = false;
+            await video.play();
+          } catch (error) {
+            console.error('Error al reproducir después de interacción:', error);
+          }
+        } else if (video.muted) {
+          // Si el video está reproduciéndose pero silenciado, intentar activar sonido
+          try {
+            video.muted = false;
+          } catch (error) {
+            console.error('Error al activar sonido:', error);
+          }
         }
       };
       
