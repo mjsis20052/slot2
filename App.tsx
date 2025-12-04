@@ -15,19 +15,19 @@ function App() {
         <div className="px-4 mb-8">
             <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative shadow-2xl border border-brand-accent/20 group">
                  {/* Backgrounds */}
-                <div className="absolute inset-0 bg-gradient-to-r from-brand-purple via-brand-dark to-brand-purple z-0"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/60 via-brand-dark/60 to-brand-purple/60 z-0"></div>
                 <video 
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 z-0"
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 z-0"
                 >
                     <source src="/video/fondo.mp4" type="video/mp4" />
                 </video>
                 
                 {/* Content - Using padding instead of fixed aspect ratio to prevent cutting off text */}
-                <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent min-h-[400px]">
+                <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/85 via-brand-dark/40 to-transparent min-h-[400px]">
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-black text-white italic drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-4 neon-text leading-tight">
                         OBTÉN UN BONO DE <br className="sm:hidden" /> BIENVENIDA CON <br className="sm:hidden" /> TU PRIMER RECARGA
                     </h1>
