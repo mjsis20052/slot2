@@ -117,7 +117,7 @@ const VideoBanner: React.FC = () => {
         {/* Content - Using padding instead of fixed aspect ratio to prevent cutting off text */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/85 via-brand-dark/40 to-transparent min-h-[400px]">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-black text-white italic drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-4 neon-text leading-tight">
-            DESPUÉS DE TU <br className="sm:hidden" /> PRIMER RECARGA <br className="sm:hidden" /> QUEDARÍA OBTÉN UN BONO DE
+            DESPUÉS DE RECARGA <br className="sm:hidden" /> QUEDARÍA OBTÉN UN BONO DE
           </h1>
           <div className="bg-brand-dark/50 backdrop-blur-sm px-6 py-2 rounded-lg border border-brand-gold/30 mb-8 inline-block transform -skew-x-12">
             <p className="text-brand-gold text-2xl md:text-4xl font-bold uppercase tracking-widest gold-text-glow transform skew-x-12">
@@ -131,7 +131,7 @@ const VideoBanner: React.FC = () => {
             rel="noreferrer"
             className="bg-brand-accent hover:bg-fuchsia-500 text-white font-bold py-4 px-12 rounded-full shadow-[0_0_30px_rgba(217,0,255,0.6)] transition-all transform hover:scale-105 hover:shadow-[0_0_50px_rgba(217,0,255,0.8)] uppercase tracking-wide text-lg flex items-center gap-2"
           >
-            RECLAMAR AHORA
+            RECARGAR AHORA
           </a>
         </div>
       </div>
