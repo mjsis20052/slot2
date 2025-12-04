@@ -16,11 +16,15 @@ function App() {
             <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden relative shadow-2xl border border-brand-accent/20 group">
                  {/* Backgrounds */}
                 <div className="absolute inset-0 bg-gradient-to-r from-brand-purple via-brand-dark to-brand-purple z-0"></div>
-                <img 
-                    src="https://picsum.photos/seed/casino99/1600/800" 
-                    alt="Casino Banner" 
-                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 z-0 transition-transform duration-1000 group-hover:scale-105"
-                />
+                <video 
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 z-0"
+                >
+                    <source src="/video/fondo.mp4" type="video/mp4" />
+                </video>
                 
                 {/* Content - Using padding instead of fixed aspect ratio to prevent cutting off text */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-center py-20 px-6 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent min-h-[400px]">
